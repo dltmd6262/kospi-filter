@@ -3,8 +3,9 @@ import { IMovingAverageInfo } from "./types";
 
 export enum StockActionTypes {
   UpdateCodeNamePairs = "UpdateCodeNamePairs",
-  AddDailyTradeInfo = "AddDailyTradeInfo",
-  SetGapThreshold = "SetGapThreshold"
+  AddMovingAverageInfo = "AddMovingAverageInfo",
+  SetGapThreshold = "SetGapThreshold",
+  UpdateAllMovingAverages = "UpdateAllMovingAverages"
 }
 
 export interface IUpdateCodeNamePairs {
@@ -20,13 +21,13 @@ export const updateCodeNamePairs = (pairs: ICodeNamePair[]) => {
 };
 
 export interface IAddDailyTradeInfo {
-  type: StockActionTypes.AddDailyTradeInfo;
+  type: StockActionTypes.AddMovingAverageInfo;
   payload: IMovingAverageInfo;
 }
 
-export const addDailyTradeInfo = (info: IMovingAverageInfo) => {
+export const addMovingAverageInfo = (info: IMovingAverageInfo) => {
   return {
-    type: StockActionTypes.AddDailyTradeInfo,
+    type: StockActionTypes.AddMovingAverageInfo,
     payload: info
   };
 };
@@ -43,7 +44,18 @@ export const setGapThreshold = (threshold: number) => {
   };
 };
 
+export interface IUpdateAllMovingAverages {
+  type: StockActionTypes.UpdateAllMovingAverages;
+}
+
+export const updateAllMovingAverages = () => {
+  return {
+    type: StockActionTypes.UpdateAllMovingAverages
+  };
+};
+
 export type StockActions =
   | IUpdateCodeNamePairs
   | IAddDailyTradeInfo
-  | ISetGapThreshold;
+  | ISetGapThreshold
+  | IUpdateAllMovingAverages;

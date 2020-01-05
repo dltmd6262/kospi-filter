@@ -44,7 +44,7 @@ export const getDailyTradeHistory = async (
 
   for (let i = 1; i <= 24; i++) {
     const res = await fetch(
-      `https://finance.naver.com/item/sise_day.nhn?code=${code}`
+      `https://finance.naver.com/item/sise_day.nhn?code=${code}&page=${i}`
     );
     const html = await res.text();
     const rows = Cheerio.load(html)("tr").filter(idx => {
@@ -67,19 +67,29 @@ export const getDailyTradeHistory = async (
         })
         .filter(d => d);
 
+      if (numbers.length === 0)
+        return {
+          date: "",
+          closingPrice: 0,
+          startingPrice: 0,
+          highest: 0,
+          lowest: 0,
+          volume: 0
+        };
+
       return {
         date: numbers[0] as string,
-        closingPrice: parseInt(numbers[1] || "", 10),
-        startingPrice: parseInt(numbers[3] || "", 10),
-        highest: parseInt(numbers[4] || "", 10),
-        lowest: parseInt(numbers[5] || "", 10),
-        volume: parseInt(numbers[6] || "", 10)
+        closingPrice: parseInt(numbers[1]!.replace(/,/g, ""), 10),
+        startingPrice: parseInt(numbers[2]!.replace(/,/g, ""), 10),
+        highest: parseInt(numbers[3]!.replace(/,/g, ""), 10),
+        lowest: parseInt(numbers[4]!.replace(/,/g, ""), 10),
+        volume: parseInt(numbers[5]!.replace(/,/g, ""), 10)
       };
-    });
+    }).filter(d => d.date);
 
     result = result.concat(data);
 
-    await new Promise(r => setTimeout(r, 50));
+    await new Promise(r => setTimeout(r, 5));
   }
 
   return result;

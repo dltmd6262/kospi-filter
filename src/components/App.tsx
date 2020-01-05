@@ -1,14 +1,27 @@
 import React from "react";
-import { Layout } from "antd";
+import { Layout, Typography } from "antd";
 import CompanyTable from "./CompanyTable";
+import { StockActionTypes } from "../store/stock/actions";
+import { connect, ConnectedProps } from "react-redux";
 
-const App: React.FC = () => {
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    updateAllMovingAverages: () =>
+      dispatch({ type: StockActionTypes.UpdateAllMovingAverages })
+  };
+};
+
+const connector = connect(null, mapDispatchToProps);
+
+const App = (props: ConnectedProps<typeof connector>) => {
+  props.updateAllMovingAverages();
+
   return (
     <Layout>
-      <p>이평선이 모아지는 종목 찾기</p>
+      <Typography.Title>이평선이 모아지는 종목 찾기</Typography.Title>
       <CompanyTable />
     </Layout>
   );
 };
 
-export default App;
+export default connector(App);

@@ -4,19 +4,7 @@ import _ from "lodash";
 
 const initialState: IStockState = {
   codeNamePairs: [],
-  allMovingAverageInfo: [
-    {
-      code: "005930",
-      name: "샘플",
-      five: 0,
-      ten: 0,
-      twenty: 0,
-      thirty: 0,
-      sixty: 0,
-      onetwenty: 0,
-      twoforty: 0
-    }
-  ],
+  allMovingAverageInfo: [],
   gapThreshold: Infinity
 };
 
@@ -24,13 +12,15 @@ export default (state = initialState, action: StockActions) => {
   switch (action.type) {
     case StockActionTypes.UpdateCodeNamePairs:
       return { ...state, codeNamePairs: action.payload };
-    case StockActionTypes.AddDailyTradeInfo:
+    case StockActionTypes.AddMovingAverageInfo:
       const infos = _.remove(
-        state.allMovingAverageInfo.slice(),
-        i => i.code === action.payload.code
-      ).push(action.payload);
+        [...state.allMovingAverageInfo],
+        i => i.code !== action.payload.code
+      );
 
-      return { ...state, allDailyTradeInfos: infos };
+      infos.push(action.payload);
+
+      return { ...state, allMovingAverageInfo: infos };
     case StockActionTypes.SetGapThreshold:
       return { ...state, gapThreshold: action.payload };
     default:
