@@ -1,5 +1,6 @@
 import { ICodeNamePair, IDailyTradeInfo } from "./api";
 import { IMovingAverageInfo } from "./store/stock/types";
+import _ from "lodash";
 
 export const sanitizeCompanyCode = (code: string): string => {
   while (code.length !== 6) {
@@ -48,4 +49,18 @@ export const calcMovingAverage = (
   }, 0);
 
   return result;
+};
+
+export const findLargestAverageGap = (info: IMovingAverageInfo): number => {
+  let averages = [
+    info.five,
+    info.ten,
+    info.twenty,
+    info.thirty,
+    info.sixty,
+    info.onetwenty,
+    info.twoforty
+  ];
+
+  return _.max(averages)! - _.min(averages)!;
 };

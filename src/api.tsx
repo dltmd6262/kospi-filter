@@ -62,8 +62,10 @@ export const getDailyTradeHistory = async (
     const data = _.map(rows, r => {
       const numbers = r.children
         .filter(c => c.type === "tag")
-        .map((t, _) => {
-          return t.children[0].children ? t.children[0].children[0].data : null;
+        .map((t, _1) => {
+          return _.isArray(t.children[0].children) && t.children[0].children[0]
+            ? t.children[0].children[0].data
+            : null;
         })
         .filter(d => d);
 
