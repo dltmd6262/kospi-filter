@@ -3,18 +3,21 @@ import Cheerio from "cheerio";
 import _ from "lodash";
 import { sanitizeCompanyCode } from "./util";
 
-interface IDailyTradeInfo {
+export type CompanyCode = string;
+export type CompanyName = string;
+
+export interface IDailyTradeInfo {
   date: string;
-  closingPrice: string;
-  startingPrice: string;
-  highest: string;
-  lowest: string;
-  volume: string;
+  closingPrice: number;
+  startingPrice: number;
+  highest: number;
+  lowest: number;
+  volume: number;
 }
 
-interface ICodeNamePair {
-  code: string;
-  name: string;
+export interface ICodeNamePair {
+  code: CompanyCode;
+  name: CompanyName;
 }
 
 export const getAllCompanyCodes = async (): Promise<ICodeNamePair[]> => {
@@ -66,11 +69,11 @@ export const getDailyTradeHistory = async (
 
       return {
         date: numbers[0] as string,
-        closingPrice: numbers[1] as string,
-        startingPrice: numbers[3] as string,
-        highest: numbers[4] as string,
-        lowest: numbers[5] as string,
-        volume: numbers[6] as string
+        closingPrice: parseInt(numbers[1] || "", 10),
+        startingPrice: parseInt(numbers[3] || "", 10),
+        highest: parseInt(numbers[4] || "", 10),
+        lowest: parseInt(numbers[5] || "", 10),
+        volume: parseInt(numbers[6] || "", 10)
       };
     });
 
