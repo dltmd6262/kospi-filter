@@ -17,4 +17,5 @@ export interface IStockState {
   codeNamePairs: ICodeNamePair[];
   allMovingAverageInfo: IMovingAverageInfo[];
   gapThreshold: number;
+  recentlyTrending: boolean;
 }

@@ -5,7 +5,8 @@ import _ from "lodash";
 const initialState: IStockState = {
   codeNamePairs: [],
   allMovingAverageInfo: [],
-  gapThreshold: Infinity
+  gapThreshold: Infinity,
+  recentlyTrending: true
 };
 
 export default (state = initialState, action: StockActions) => {
@@ -23,6 +24,8 @@ export default (state = initialState, action: StockActions) => {
       return { ...state, allMovingAverageInfo: infos };
     case StockActionTypes.SetGapThreshold:
       return { ...state, gapThreshold: action.payload };
+    case StockActionTypes.SetRecentlyTrending:
+      return { ...state, recentlyTrending: action.payload };
     default:
       return state;
   }

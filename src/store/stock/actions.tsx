@@ -5,7 +5,8 @@ export enum StockActionTypes {
   UpdateCodeNamePairs = "UpdateCodeNamePairs",
   AddMovingAverageInfo = "AddMovingAverageInfo",
   SetGapThreshold = "SetGapThreshold",
-  UpdateAllMovingAverages = "UpdateAllMovingAverages"
+  UpdateAllMovingAverages = "UpdateAllMovingAverages",
+  SetRecentlyTrending = "SetRecentlyTrending"
 }
 
 export interface IUpdateCodeNamePairs {
@@ -54,8 +55,21 @@ export const updateAllMovingAverages = () => {
   };
 };
 
+export interface ISetRecentlyTrending {
+  type: StockActionTypes.SetRecentlyTrending;
+  payload: boolean;
+}
+
+export const setRecentlyTrending = (value: boolean) => {
+  return {
+    type: StockActionTypes.UpdateAllMovingAverages,
+    payload: value
+  };
+};
+
 export type StockActions =
   | IUpdateCodeNamePairs
   | IAddDailyTradeInfo
   | ISetGapThreshold
-  | IUpdateAllMovingAverages;
+  | IUpdateAllMovingAverages
+  | ISetRecentlyTrending;

@@ -51,7 +51,7 @@ export const calcMovingAverage = (
   return result;
 };
 
-export const findLargestAverageGap = (info: IMovingAverageInfo): number => {
+export const findLargestGapPer = (info: IMovingAverageInfo): number => {
   let averages = [
     info.five,
     info.ten,
@@ -62,5 +62,19 @@ export const findLargestAverageGap = (info: IMovingAverageInfo): number => {
     info.twoforty
   ];
 
-  return _.max(averages)! - _.min(averages)!;
+  return ((_.max(averages)! - _.min(averages)!) / _.min(averages)!) * 100;
+};
+
+export const isRecentlyTrending = (info: IMovingAverageInfo): boolean => {
+  let averages = [
+    info.five,
+    info.ten,
+    info.twenty,
+    info.thirty,
+    info.sixty,
+    info.onetwenty,
+    info.twoforty
+  ];
+
+  return _.max(averages) === info.five;
 };

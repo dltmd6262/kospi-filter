@@ -3,7 +3,7 @@ import { Table, Button } from "antd";
 import { AppState } from "../store/types";
 import { connect, ConnectedProps } from "react-redux";
 import { CompanyCode } from "../api";
-import { findLargestAverageGap } from "../util";
+import { findLargestGapPer, isRecentlyTrending } from "../util";
 
 const { shell } = window.require("electron");
 
@@ -44,14 +44,17 @@ const columns = [
 
 const mapStateToProps = (state: AppState) => ({
   allMovingAverageInfo: state.stock.allMovingAverageInfo,
-  gapThreshold: state.stock.gapThreshold
+  gapThreshold: state.stock.gapThreshold,
+  recentlyTrending: state.stock.recentlyTrending
 });
 
 const connector = connect(mapStateToProps);
 
 const CompanyTable = (props: ConnectedProps<typeof connector>) => {
   const data = props.allMovingAverageInfo.filter(
-    info => findLargestAverageGap(info) < props.gapThreshold
+    info =>
+      findLargestGapPer(info) < props.gapThreshold &&
+      (!props.recentlyTrending || isRecentlyTrending(info))
   );
 
   return (
