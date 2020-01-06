@@ -34,6 +34,10 @@
   "build": {
     "appId": "kospi_filter",
     "extends": null,
+    "files": [
+      "build/**/*",
+      "src/electron.js"
+    ],
     "mac": {
       "category": "your.app.category.type"
     }
