@@ -4,10 +4,10 @@ import {
   getDailyTradeHistory,
   IDailyTradeInfo
 } from "../api";
-import { calcMovingAverage, getCurrentDate } from "../util";
+import { calcMovingAverage } from "../util";
 import { StockActionTypes } from "../store/stock/actions";
 import { getCompanyCodes } from "./selectors";
-import { has, get, set, clear } from "../storage";
+import CompanyInfoCache from "../cache";
 
 function* fetchAllCompanyCodes() {
   const allCompanyCodes = yield call(getAllCompanyCodes);
@@ -18,8 +18,9 @@ function* fetchAllCompanyCodes() {
 }
 
 function* clearCache() {
-  yield call(clear);
-  yield call(updateAllMovingAverages);
+  const cache = CompanyInfoCache.getInstance();
+  cache.cleanCache();
+  yield call(cache.commit.bind(cache));
 }
 
 function* updateAllMovingAverages() {
@@ -29,40 +30,40 @@ function* updateAllMovingAverages() {
   }
 
   let companies = yield select(getCompanyCodes);
+  let cache = CompanyInfoCache.getInstance();
+  yield call(cache.init.bind(cache));
+  yield put({
+    type: StockActionTypes.BulkUpdateMAInfo,
+    payload: cache.infos
+  });
 
-  if (yield call(has, getCurrentDate())) {
-    const allAverages = yield call(get, getCurrentDate());
-    for (let i = 0; i < allAverages.data.length; i++) {
-      yield put({
-        type: StockActionTypes.AddMovingAverageInfo,
-        payload: allAverages.data[i]
-      });
-    }
-  } else {
-    // Clear previous cache of moving averages
-    yield call(clear);
+  // Do serially due to traffic
+  for (let i = 0; i < companies.length; i++) {
+    const company = companies[i];
 
-    const allAverages = [];
-
-    // Do serially due to traffic
-    for (let i = 0; i < companies.length; i++) {
-      const company = companies[i];
+    if (!cache.getCompanyInfo(company.code)) {
       const dailyInfo: IDailyTradeInfo[] = yield call(
         getDailyTradeHistory,
         company.code
       );
 
-      const averages = calcMovingAverage(company, dailyInfo);
-      allAverages.push(averages);
+      cache.updateCompanyInfo(
+        company.code,
+        calcMovingAverage(company, dailyInfo)
+      );
 
-      yield put({
-        type: StockActionTypes.AddMovingAverageInfo,
-        payload: averages
-      });
+      yield call(cache.commit.bind(cache));
+
+      if (cache.getCompanyInfo(company.code)) {
+        yield put({
+          type: StockActionTypes.AddMovingAverageInfo,
+          payload: cache.getCompanyInfo(company.code)
+        });
+      }
     }
-
-    yield call(set, getCurrentDate(), { data: allAverages });
   }
+
+  yield call(cache.cleanOldCache.bind(cache));
 }
 
 export function* watchUpdateAllMovingAverages() {

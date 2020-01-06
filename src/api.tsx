@@ -90,8 +90,6 @@ export const getDailyTradeHistory = async (
     }).filter(d => d.date);
 
     result = result.concat(data);
-
-    await new Promise(r => setTimeout(r, 5));
   }
 
   return result;

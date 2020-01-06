@@ -4,6 +4,7 @@ import { IMovingAverageInfo } from "./types";
 export enum StockActionTypes {
   UpdateCodeNamePairs = "UpdateCodeNamePairs",
   AddMovingAverageInfo = "AddMovingAverageInfo",
+  BulkUpdateMAInfo = "BulkUpdateMAInfo",
   SetGapThreshold = "SetGapThreshold",
   UpdateAllMovingAverages = "UpdateAllMovingAverages",
   SetRecentlyTrending = "SetRecentlyTrending",
@@ -68,6 +69,18 @@ export const setRecentlyTrending = (value: boolean) => {
   };
 };
 
+export interface IBulkUpdateMAInfo {
+  type: StockActionTypes.BulkUpdateMAInfo;
+  payload: IMovingAverageInfo[];
+}
+
+export const bulkUpdateMAInfo = (list: IMovingAverageInfo[]) => {
+  return {
+    type: StockActionTypes.BulkUpdateMAInfo,
+    payload: list
+  };
+};
+
 export interface IClearCache {
   type: StockActionTypes.ClearCache;
 }
@@ -78,4 +91,5 @@ export type StockActions =
   | ISetGapThreshold
   | IUpdateAllMovingAverages
   | ISetRecentlyTrending
-  | IClearCache;
+  | IClearCache
+  | IBulkUpdateMAInfo;

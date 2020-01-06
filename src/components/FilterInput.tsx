@@ -51,7 +51,7 @@ const FilterArea = (props: ConnectedProps<typeof connector>) => {
         <Checkbox checked={props.recentlyTrending} onChange={onTrendingChange}>
           {"5일 이평선 최고가"}
         </Checkbox>
-        <Button onClick={onClearCache}>{"캐시 지우기"}</Button>
+        <Button onClick={onClearCache}>{"새로고침"}</Button>
       </Col>
     </Row>
   );

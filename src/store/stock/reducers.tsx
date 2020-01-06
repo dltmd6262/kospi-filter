@@ -22,6 +22,8 @@ export default (state = initialState, action: StockActions) => {
       infos.push(action.payload);
 
       return { ...state, allMovingAverageInfo: infos };
+    case StockActionTypes.BulkUpdateMAInfo:
+      return { ...state, allMovingAverageInfo: action.payload };
     case StockActionTypes.SetGapThreshold:
       return { ...state, gapThreshold: action.payload };
     case StockActionTypes.SetRecentlyTrending:
