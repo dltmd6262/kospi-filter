@@ -6,7 +6,8 @@ export enum StockActionTypes {
   AddMovingAverageInfo = "AddMovingAverageInfo",
   SetGapThreshold = "SetGapThreshold",
   UpdateAllMovingAverages = "UpdateAllMovingAverages",
-  SetRecentlyTrending = "SetRecentlyTrending"
+  SetRecentlyTrending = "SetRecentlyTrending",
+  ClearCache = "ClearCache"
 }
 
 export interface IUpdateCodeNamePairs {
@@ -67,9 +68,14 @@ export const setRecentlyTrending = (value: boolean) => {
   };
 };
 
+export interface IClearCache {
+  type: StockActionTypes.ClearCache;
+}
+
 export type StockActions =
   | IUpdateCodeNamePairs
   | IAddDailyTradeInfo
   | ISetGapThreshold
   | IUpdateAllMovingAverages
-  | ISetRecentlyTrending;
+  | ISetRecentlyTrending
+  | IClearCache;

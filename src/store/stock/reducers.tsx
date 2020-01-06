@@ -26,6 +26,8 @@ export default (state = initialState, action: StockActions) => {
       return { ...state, gapThreshold: action.payload };
     case StockActionTypes.SetRecentlyTrending:
       return { ...state, recentlyTrending: action.payload };
+    case StockActionTypes.ClearCache:
+      return { ...state, allMovingAverageInfo: [] };
     default:
       return state;
   }

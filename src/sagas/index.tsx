@@ -1,6 +1,6 @@
 import { all } from "redux-saga/effects";
-import { watchUpdateAllMovingAverages } from "./stock";
+import { watchUpdateAllMovingAverages, watchClearCache } from "./stock";
 
 export default function* rootSaga() {
-  yield all([watchUpdateAllMovingAverages()]);
+  yield all([watchUpdateAllMovingAverages(), watchClearCache()]);
 }

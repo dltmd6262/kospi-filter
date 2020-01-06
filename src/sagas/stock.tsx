@@ -1,4 +1,4 @@
-import { call, put, select, takeLatest } from "redux-saga/effects";
+import { call, put, select, takeLatest, takeEvery } from "redux-saga/effects";
 import {
   getAllCompanyCodes,
   getDailyTradeHistory,
@@ -15,6 +15,11 @@ function* fetchAllCompanyCodes() {
     type: StockActionTypes.UpdateCodeNamePairs,
     payload: allCompanyCodes
   });
+}
+
+function* clearCache() {
+  yield call(clear);
+  yield call(updateAllMovingAverages);
 }
 
 function* updateAllMovingAverages() {
@@ -34,10 +39,13 @@ function* updateAllMovingAverages() {
       });
     }
   } else {
+    // Clear previous cache of moving averages
+    yield call(clear);
+
     const allAverages = [];
 
     // Do serially due to traffic
-    for (let i = 0; i < companies.length - 890; i++) {
+    for (let i = 0; i < companies.length; i++) {
       const company = companies[i];
       const dailyInfo: IDailyTradeInfo[] = yield call(
         getDailyTradeHistory,
@@ -62,4 +70,8 @@ export function* watchUpdateAllMovingAverages() {
     StockActionTypes.UpdateAllMovingAverages,
     updateAllMovingAverages
   );
+}
+
+export function* watchClearCache() {
+  yield takeEvery(StockActionTypes.ClearCache, clearCache);
 }
