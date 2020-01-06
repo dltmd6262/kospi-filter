@@ -3,6 +3,7 @@ import { Input, Row, Checkbox, Col, Button } from "antd";
 import { connect, ConnectedProps } from "react-redux";
 import { StockActionTypes } from "../store/stock/actions";
 import { AppState } from "../store/types";
+import styled from "styled-components";
 
 const mapStateToProps = (state: AppState) => ({
   recentlyTrending: state.stock.recentlyTrending
@@ -22,6 +23,19 @@ const mapDispatchToProps = (dispatch: any) => ({
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
+
+const StyledGapInput = styled(Input)`
+  && {
+    margin-left: 20px;
+    max-width: 200px;
+  }
+`;
+
+const StyledCheckbox = styled(Checkbox)`
+  && {
+    margin-left: 20px;
+  }
+`;
 
 const FilterArea = (props: ConnectedProps<typeof connector>) => {
   const onGapChange = (e: any) => {
@@ -45,15 +59,16 @@ const FilterArea = (props: ConnectedProps<typeof connector>) => {
   };
 
   return (
-    <Row>
-      <Col>
-        <Input onChange={onGapChange} placeholder={"최고차이(%)"} />
-        <Checkbox checked={props.recentlyTrending} onChange={onTrendingChange}>
-          {"5일 이평선 최고가"}
-        </Checkbox>
-        <Button onClick={onClearCache}>{"새로고침"}</Button>
-      </Col>
-    </Row>
+    <div>
+      <StyledGapInput onChange={onGapChange} placeholder={"최고차이(%)"} />
+      <StyledCheckbox
+        checked={props.recentlyTrending}
+        onChange={onTrendingChange}
+      >
+        {"5일 이평선 최고가"}
+      </StyledCheckbox>
+      <Button onClick={onClearCache}>{"새로고침"}</Button>
+    </div>
   );
 };
 

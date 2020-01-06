@@ -15,6 +15,7 @@
     "@types/react": "^16.9.17",
     "@types/react-dom": "^16.9.4",
     "@types/react-redux": "^7.1.5",
+    "@types/styled-components": "^4.4.1",
     "antd": "^3.26.6",
     "cheerio": "^1.0.0-rc.3",
     "csv-parse": "^4.8.3",
