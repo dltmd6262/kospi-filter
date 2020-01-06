@@ -10,6 +10,11 @@ export const sanitizeCompanyCode = (code: string): string => {
   return code;
 };
 
+export const getCurrentDate = () => {
+  const t = new Date();
+  return t.getFullYear() + "-" + (t.getMonth() + 1) + "-" + t.getDate();
+};
+
 export const calcMovingAverage = (
   company: ICodeNamePair,
   dailyInfo: IDailyTradeInfo[]
