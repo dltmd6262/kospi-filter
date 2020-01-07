@@ -1,5 +1,5 @@
 import React from "react";
-import { Input, Row, Checkbox, Col, Button } from "antd";
+import { Input, Checkbox, Button } from "antd";
 import { connect, ConnectedProps } from "react-redux";
 import { StockActionTypes } from "../store/stock/actions";
 import { AppState } from "../store/types";
