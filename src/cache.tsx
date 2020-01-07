@@ -1,8 +1,8 @@
 import { CompanyCode } from "./api";
-import _ from "lodash";
 import { get, set, clear } from "./storage";
 import { getCurrentDate } from "./util";
 import { IMovingAverageInfo } from "./store/stock/types";
+import _ from "lodash";
 
 export default class CompanyInfoCache {
   static _instance: CompanyInfoCache | null;
@@ -15,7 +15,7 @@ export default class CompanyInfoCache {
 
   async init() {
     const storedData = await get(getCurrentDate());
-    this.infos = storedData ? storedData.data : [];
+    this.infos = storedData && storedData.data ? storedData.data : [];
   }
 
   async commit() {
