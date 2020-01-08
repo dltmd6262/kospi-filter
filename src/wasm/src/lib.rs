@@ -1,5 +1,4 @@
 use wasm_bindgen::prelude::*;
-// use web_sys::console;
 
 // When the `wee_alloc` feature is enabled, this uses `wee_alloc` as the global
 // allocator.
@@ -9,26 +8,47 @@ use wasm_bindgen::prelude::*;
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
-// // This is like the `main` function, except for JavaScript.
-// #[wasm_bindgen(start)]
-// pub fn main_js() -> Result<(), JsValue> {
-//     // This provides better error messages in debug mode.
-//     // It's disabled in release mode so it doesn't bloat up the file size.
-//     #[cfg(debug_assertions)]
-//     console_error_panic_hook::set_once();
+#[macro_use]
+extern crate serde_derive;
 
-//     // Your code goes here!
-//     console::log_1(&JsValue::from_str("Hello world!"));
+#[derive(Serialize, Deserialize)]
+pub struct DailyTradeInfo {
+  highest: u32,
+  lowest: u32,
+}
 
-//     Ok(())
-// }
-
-#[wasm_bindgen]
-extern "C" {
-  fn alert(s: &str);
+#[derive(Serialize, Deserialize)]
+pub struct CompanyTradeInfo {
+  name: String,
+  trade_infos: Vec<DailyTradeInfo>,
 }
 
 #[wasm_bindgen]
-pub fn greet(name: &str) {
-  alert(&format!("Hello, {}!", name));
+#[derive(Serialize, Deserialize)]
+pub struct MovingAverageInfo {
+  name: String,
+  five: u32,
+}
+
+#[wasm_bindgen]
+impl MovingAverageInfo {
+  #[wasm_bindgen(getter)]
+  pub fn name(&self) -> String {
+    self.name.clone()
+  }
+
+  #[wasm_bindgen(getter)]
+  pub fn five(&self) -> u32 {
+    self.five
+  }
+}
+
+#[wasm_bindgen]
+pub fn calculate_moving_average(js_obj: &JsValue) -> MovingAverageInfo {
+  let trade_info: CompanyTradeInfo = js_obj.into_serde().unwrap();
+
+  MovingAverageInfo {
+    name: "yes".to_owned(),
+    five: 10,
+  }
 }

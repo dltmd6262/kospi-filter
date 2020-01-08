@@ -5,9 +5,16 @@ import { configureStore } from "./store";
 import { Provider } from "react-redux";
 import "antd/dist/antd.css";
 
-//@ts-ignore
-const rust = import("moving_average_calculator");
-rust.then(m => m.greet("as"));
+// const rust = import("moving_average_calculator");
+// rust.then(m =>
+//   console.log(
+//     1111,
+//     m.calculate_moving_average({
+//       name: "yes",
+//       trade_infos: [{ highest: 10, lowest: 10 }]
+//     })
+//   )
+// );
 
 const store = configureStore();
 const RootApp = () => {

@@ -1,6 +1,6 @@
 # You must change these to your own details.
 [package]
-name = "moving_average_calculator"
+name = "moving-average-calculator"
 description = "Calculates moving average of a company's daily trade closing price"
 version = "0.1.0"
 authors = ["Kevin Han <dltmd6262@gmail.com>"]
@@ -21,9 +21,13 @@ lto = true
 #default = ["wee_alloc"]
 
 [dependencies]
+serde = "^1.0.59"
+serde_derive = "^1.0.59"
 # The `wasm-bindgen` crate provides the bare minimum functionality needed
 # to interact with JavaScript.
-wasm-bindgen = "0.2.45"
+[dependencies.wasm-bindgen]
+version = "^0.2.45"
+features = ["serde-serialize"]
 
 # `wee_alloc` is a tiny allocator for wasm that is only ~1K in code size
 # compared to the default allocator's ~10K. However, it is slower than the default
