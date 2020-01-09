@@ -47,10 +47,9 @@ function* updateAllMovingAverages() {
         company.code
       );
 
-      cache.updateCompanyInfo(
-        company.code,
-        calcMovingAverage(company, dailyInfo)
-      );
+      const movingAverage = yield call(calcMovingAverage, company, dailyInfo);
+
+      cache.updateCompanyInfo(company.code, movingAverage);
 
       yield call(cache.commit.bind(cache));
 

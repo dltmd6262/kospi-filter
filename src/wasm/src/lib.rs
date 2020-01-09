@@ -1,3 +1,4 @@
+use console_error_panic_hook;
 use wasm_bindgen::prelude::*;
 
 // When the `wee_alloc` feature is enabled, this uses `wee_alloc` as the global
@@ -13,42 +14,56 @@ extern crate serde_derive;
 
 #[derive(Serialize, Deserialize)]
 pub struct DailyTradeInfo {
-  highest: u32,
-  lowest: u32,
+  pub highest: u32,
+  pub lowest: u32,
 }
 
 #[derive(Serialize, Deserialize)]
 pub struct CompanyTradeInfo {
-  name: String,
-  trade_infos: Vec<DailyTradeInfo>,
+  pub trade_infos: Vec<DailyTradeInfo>,
 }
 
 #[wasm_bindgen]
 #[derive(Serialize, Deserialize)]
 pub struct MovingAverageInfo {
-  name: String,
-  five: u32,
-}
-
-#[wasm_bindgen]
-impl MovingAverageInfo {
-  #[wasm_bindgen(getter)]
-  pub fn name(&self) -> String {
-    self.name.clone()
-  }
-
-  #[wasm_bindgen(getter)]
-  pub fn five(&self) -> u32 {
-    self.five
-  }
+  pub five: u32,
+  pub ten: u32,
+  pub twenty: u32,
+  pub thirty: u32,
+  pub sixty: u32,
+  pub onetwenty: u32,
+  pub twoforty: u32,
 }
 
 #[wasm_bindgen]
 pub fn calculate_moving_average(js_obj: &JsValue) -> MovingAverageInfo {
-  let trade_info: CompanyTradeInfo = js_obj.into_serde().unwrap();
+  console_error_panic_hook::set_once();
 
-  MovingAverageInfo {
-    name: "yes".to_owned(),
-    five: 10,
+  let data = js_obj.into_serde::<CompanyTradeInfo>().unwrap().trade_infos;
+  let mut res = MovingAverageInfo {
+    five: 0,
+    ten: 0,
+    twenty: 0,
+    thirty: 0,
+    sixty: 0,
+    onetwenty: 0,
+    twoforty: 0,
+  };
+  let mut sum = 0;
+  for (idx, info) in data.iter().enumerate() {
+    sum = sum + info.highest;
+
+    match idx + 1 {
+      5 => res.five = sum / 5,
+      10 => res.ten = sum / 10,
+      20 => res.twenty = sum / 20,
+      30 => res.thirty = sum / 30,
+      60 => res.sixty = sum / 60,
+      120 => res.onetwenty = sum / 120,
+      240 => res.twoforty = sum / 240,
+      _ => (),
+    };
   }
+
+  res
 }

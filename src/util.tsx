@@ -2,6 +2,8 @@ import { ICodeNamePair, IDailyTradeInfo } from "./api";
 import { IMovingAverageInfo } from "./store/stock/types";
 import _ from "lodash";
 
+const wasm = import("moving_average_calculator");
+
 export const sanitizeCompanyCode = (code: string): string => {
   while (code.length !== 6) {
     code = "0" + code;
@@ -15,45 +17,26 @@ export const getCurrentDate = () => {
   return t.getFullYear() + "-" + (t.getMonth() + 1) + "-" + t.getDate();
 };
 
-export const calcMovingAverage = (
+export const calcMovingAverage = async (
   company: ICodeNamePair,
   dailyInfo: IDailyTradeInfo[]
-): IMovingAverageInfo => {
-  let result: IMovingAverageInfo = {
+): Promise<IMovingAverageInfo> => {
+  const module = await wasm;
+  const res = module.calculate_moving_average({
+    trade_infos: dailyInfo
+  });
+
+  return {
     code: company.code,
     name: company.name,
-    five: 0,
-    ten: 0,
-    twenty: 0,
-    thirty: 0,
-    sixty: 0,
-    onetwenty: 0,
-    twoforty: 0
+    five: res.five,
+    ten: res.ten,
+    twenty: res.twenty,
+    thirty: res.thirty,
+    sixty: res.sixty,
+    onetwenty: res.onetwenty,
+    twoforty: res.twoforty
   };
-
-  dailyInfo.reduce<number>((acc, cur, idx) => {
-    acc = acc + cur.closingPrice;
-
-    if (idx === 4) {
-      result.five = Math.round(acc / 5);
-    } else if (idx === 9) {
-      result.ten = Math.round(acc / 10);
-    } else if (idx === 19) {
-      result.twenty = Math.round(acc / 20);
-    } else if (idx === 29) {
-      result.thirty = Math.round(acc / 30);
-    } else if (idx === 59) {
-      result.sixty = Math.round(acc / 60);
-    } else if (idx === 119) {
-      result.onetwenty = Math.round(acc / 120);
-    } else if (idx === 239) {
-      result.twoforty = Math.round(acc / 240);
-    }
-
-    return acc;
-  }, 0);
-
-  return result;
 };
 
 export const findLargestGapPer = (info: IMovingAverageInfo): number => {

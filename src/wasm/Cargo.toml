@@ -23,6 +23,7 @@ lto = true
 [dependencies]
 serde = "^1.0.59"
 serde_derive = "^1.0.59"
+console_error_panic_hook = "0.1.6"
 # The `wasm-bindgen` crate provides the bare minimum functionality needed
 # to interact with JavaScript.
 [dependencies.wasm-bindgen]
